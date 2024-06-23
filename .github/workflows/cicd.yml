@@ -11,8 +11,8 @@ on:
 
 jobs:
     test_service:
-        uses: ./.github/workflows/test.yml
+        uses: PeterKahenya/rapt/.github/workflows/test.yml@main
     build_images:
-        uses: ./.github/workflows/build.yml
+        uses: PeterKahenya/rapt/.github/workflows/build.yml@main
     deploy_to_k8s:
-        uses: ./.github/workflows/deploy.yml
+        uses: PeterKahenya/rapt/.github/workflows/deploy.yml@main
