@@ -5,3 +5,6 @@ Application is built on python, fastapi, mysql, k8s with the frontend based on n
 ![High level diagram](design/rapt_system_design.jpg)
 ## Entity relationship diagram (ERD)
 ![High level diagram](design/rapt_erd.jpg)
+## System Flowchart
+Shows step by step how the application works
+![Flowchart](design/rapt_system_design.jpg)
