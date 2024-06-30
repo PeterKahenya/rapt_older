@@ -163,3 +163,5 @@ def test_user_role_assignment(db):
     db.add(user)
     db.commit()
     assert role in user.roles
+
+

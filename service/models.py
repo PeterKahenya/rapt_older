@@ -1,6 +1,6 @@
 from typing import List
 import uuid
-import datetime
+from datetime import datetime, timedelta, timezone
 import jwt
 from sqlalchemy import Column,Uuid,String,Boolean,DateTime,ForeignKey,Table
 from sqlalchemy.orm import relationship,backref
@@ -99,7 +99,8 @@ class User(Model):
     #create a jwt token for the user
     def create_jwt_token(self):
         logger.info(f"Creating JWT token for user {self.phone}")
-        return jwt.encode({"sub":self.phone},settings.jwt_secret_key,algorithm=settings.jwt_algorithm)
+        expire = datetime.now(timezone.utc) + timedelta(minutes=access_token_expiry_minutes)
+        return jwt.encode({"sub":self.phone,"exp":expire},settings.jwt_secret_key,algorithm=settings.jwt_algorithm)
 
 
 class ContentType(Model):

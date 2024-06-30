@@ -37,6 +37,7 @@ env:
     ENVIRONMENT: ${{ secrets.ENVIRONMENT }}
     MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
     API_URL: ${{ secrets.API_URL }}
+    ACCESS_TOKEN_EXPIRY_MINUTES: ${{ secrets.ACCESS_TOKEN_EXPIRY_MINUTES }}
 
 jobs:
     test:
