@@ -14,5 +14,7 @@ jobs:
         uses: PeterKahenya/rapt/.github/workflows/test.yml@main
     build_images:
         uses: PeterKahenya/rapt/.github/workflows/build.yml@main
+        needs: test_service
     deploy_to_k8s:
         uses: PeterKahenya/rapt/.github/workflows/deploy.yml@main
+        needs: build_images
