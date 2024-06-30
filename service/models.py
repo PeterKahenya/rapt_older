@@ -5,12 +5,10 @@ import jwt
 from sqlalchemy import Column,Uuid,String,Boolean,DateTime,ForeignKey,Table
 from sqlalchemy.orm import relationship,backref
 from sqlalchemy.orm import declarative_base,Session
-from .config import settings,logger
-from app import utils
-
+from config import settings,logger
+from utils import generate_random_string, generate_client_id, generate_client_secret
 
 Model = declarative_base()
-
 
 contacts_association = Table(
     'contacts',
@@ -77,7 +75,7 @@ class User(Model):
 
     #initialize verification code and expiry time and save to the user
     async def initialize_verification_code(self,db:Session):
-        code = utils.generate_random_string(length=settings.verification_code_length)
+        code = generate_random_string(length=settings.verification_code_length)
         expiry_at = datetime.datetime.now() + datetime.timedelta(milliseconds=settings.verification_code_expiry_milliseconds)
         logger.info(f"User {self.phone} verification code initialized to {code} expires at {expiry_at}")
         self.phone_verification_code = code
@@ -110,7 +108,7 @@ class ContentType(Model):
     content = Column(String(100))
     created_at = Column(DateTime(),default=datetime.datetime.now)
     updated_at = Column(DateTime(),onupdate=datetime.datetime.now)
-    permissions = relationship("Permission",backref="content_type")
+    permissions = relationship("Permission",back_populates="content_type")
 
 
 
@@ -122,7 +120,7 @@ class Permission(Model):
     created_at = Column(DateTime(),default=datetime.datetime.now)
     updated_at = Column(DateTime(),onupdate=datetime.datetime.now)
     content_type_id = Column(Uuid,ForeignKey("content_types.id"))
-    content_type = relationship("ContentType",backref="permissions")
+    content_type = relationship("ContentType",back_populates="permissions")
     roles = relationship(
         'Role',
         secondary=role_permissions_association,
@@ -137,8 +135,6 @@ class Role(Model):
     description = Column(String(500))
     created_at = Column(DateTime(),default=datetime.datetime.now)
     updated_at = Column(DateTime(),onupdate=datetime.datetime.now)
-    permissions = relationship("Permission",secondary="role_permissions",backref="roles")
-
     permissions = relationship(
         'Permission',
         secondary=role_permissions_association,
@@ -240,8 +236,8 @@ class ClientApp(Model):
     id = Column(Uuid,primary_key=True,unique=True,default=uuid.uuid4)
     name = Column(String(100))
     description = Column(String(500))
-    client_id = Column(String(100),unique=True,default=utils.generate_client_id)
-    client_secret = Column(String(100),unique=True,default=utils.generate_client_secret)
+    client_id = Column(String(100),unique=True,default=generate_client_id)
+    client_secret = Column(String(100),unique=True,default=generate_client_secret)
     created_at = Column(DateTime(),default=datetime.datetime.now)
     updated_at = Column(DateTime(),onupdate=datetime.datetime.now)
     user_id = Column(Uuid,ForeignKey("users.id"))
@@ -260,7 +256,7 @@ class ClientApp(Model):
         self.name = name
         self.user = user
         self.description = description
-        self.client_id = utils.generate_client_id()
-        self.client_secret = utils.generate_client_secret()
+        self.client_id = generate_client_id()
+        self.client_secret = generate_client_secret()
 
 
