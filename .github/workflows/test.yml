@@ -34,7 +34,7 @@ jobs:
             TEST_DATABASE_DRIVER: ${{ secrets.TEST_DATABASE_DRIVER }}
         defaults:
           run:
-            working-directory: ./service
+            working-directory: service
         strategy:
           max-parallel: 4
           matrix:
