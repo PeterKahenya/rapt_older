@@ -16,7 +16,6 @@ class AppSettings(BaseSettings):
     mysql_user: str
     mysql_password: str
     mysql_database: str
-    test_database_driver: str
     test_database_host: str
     test_database_port: int
     test_database_user: str
@@ -35,6 +34,6 @@ class AppSettings(BaseSettings):
     superuser_phone: str
 
 settings = AppSettings()
-TEST_DATABASE_URL = f"{settings.test_database_driver}://{settings.test_database_user}:{settings.test_database_password}@{settings.test_database_host}:{settings.test_database_port}"
+TEST_DATABASE_URL = f"{settings.mysql_driver}://{settings.test_database_user}:{settings.test_database_password}@{settings.test_database_host}:{settings.test_database_port}"
 DATABASE_URL = f"{settings.mysql_driver}://{settings.mysql_user}:{settings.mysql_password}@{settings.mysql_host}:{settings.mysql_port}/{settings.mysql_database}"
 
