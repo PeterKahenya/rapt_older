@@ -32,6 +32,7 @@ class AppSettings(BaseSettings):
     environment: str
     rabbitmq_url: str
     superuser_phone: str
+    access_token_expiry_minutes: int
 
 settings = AppSettings()
 TEST_DATABASE_URL = f"{settings.mysql_driver}://{settings.test_database_user}:{settings.test_database_password}@{settings.test_database_host}:{settings.test_database_port}"
