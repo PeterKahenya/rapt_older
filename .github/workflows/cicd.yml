@@ -5,9 +5,9 @@ on:
     workflow_call:
     workflow_dispatch:
     push:
-        branches: [main,dev]
+        branches: [main]
     pull_request:
-        branches: [main,dev]
+        branches: [main]
 
 env:
     TEST_DATABASE_NAME: ${{ secrets.TEST_DATABASE_NAME }}
