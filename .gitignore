@@ -1,2 +1,3 @@
 k8s/rapt-k8-cluster-kubeconfig.yaml
 .env
+.envrc
