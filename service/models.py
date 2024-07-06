@@ -9,7 +9,15 @@ from sqlalchemy.orm import declarative_base,Session
 from config import settings,logger
 from utils import generate_random_string, generate_client_id, generate_client_secret
 
-Model = declarative_base()
+Base = declarative_base()
+
+
+class Model(Base):
+    __abstract__ = True
+    metadata = Base.metadata
+
+    def to_dict(self):
+        return {c.name: str(getattr(self, c.name)) for c in self.__table__.columns}
 
 contacts_association = Table(
     'contacts',
@@ -225,7 +233,7 @@ class Media(Model):
     __tablename__ = "media"
     id = Column(Uuid,primary_key=True,unique=True,default=uuid.uuid4)
     link = Column(String(1024))
-    type = Column(String(100))
+    file_type = Column(String(100))
     created_at = Column(DateTime(),default=datetime.datetime.now)
     updated_at = Column(DateTime(),onupdate=datetime.datetime.now)
 
