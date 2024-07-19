@@ -1,5 +1,0 @@
-{
-    "terminal.integrated.env.linux": {
-        "PYTHONDONTWRITEBYTECODE": "1"
-    }
-}

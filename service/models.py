@@ -17,7 +17,7 @@ class Model(Base):
     metadata = Base.metadata
 
     def to_dict(self):
-        return {c.name: str(getattr(self, c.name)) for c in self.__table__.columns}
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
 contacts_association = Table(
     'contacts',
@@ -52,12 +52,12 @@ class User(Model):
     id = Column(Uuid,primary_key=True,unique=True,default=uuid.uuid4)
     name = Column(String(50))
     phone = Column(String(12),unique=True)
-    is_active = Column(Boolean,default=False)
-    is_superuser = Column(Boolean,default=False)
-    last_seen = Column(DateTime)
     phone_verification_code = Column(String(6))
     phone_verification_code_expiry_at = Column(DateTime())
-    is_verified = Column(Boolean)
+    is_active = Column(Boolean,default=False)
+    is_superuser = Column(Boolean,default=False)
+    is_verified = Column(Boolean,default=False)
+    last_seen = Column(DateTime)
     created_at = Column(DateTime(),default=datetime.datetime.now)
     updated_at = Column(DateTime(),onupdate=datetime.datetime.now)
 
@@ -119,7 +119,6 @@ class ContentType(Model):
     created_at = Column(DateTime(),default=datetime.datetime.now)
     updated_at = Column(DateTime(),onupdate=datetime.datetime.now)
     permissions = relationship("Permission",back_populates="content_type")
-
 
 
 class Permission(Model):

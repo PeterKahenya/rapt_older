@@ -88,6 +88,9 @@ class UserContact(BaseModel):
     name: str
     phone: str
     is_active: bool
+    model_config = {
+        "from_attributes": True
+    }
 
 class UserUpdate(BaseModel):
     name: Optional[str] = None

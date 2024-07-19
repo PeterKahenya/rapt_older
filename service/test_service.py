@@ -4,7 +4,13 @@ from sqlalchemy import create_engine,text
 from sqlalchemy.orm import sessionmaker
 from models import *
 from config import settings,TEST_DATABASE_URL
+from crud import *
 from schemas import *
+import asyncio
+import sqlalchemy
+
+
+pytest_plugins = ('pytest_asyncio',)
 
 
 @pytest.fixture(scope="session")
@@ -352,5 +358,53 @@ def test_media_schema(db):
     media_schema = MediaInDBBase.model_validate(media_get)
     assert media_schema.link == media_get.link
     assert media_schema.file_type == media_get.file_type
+
+
+"""Test CRUD Operations"""
+#test clientapp crud operations
+@pytest.mark.asyncio
+async def test_clientapp_crud(db):
+    #test create clientapp
+    user = db.query(User).first()
+    client_app = ClientAppCreate(**{"name": "Test App","description": "Test App Description"})
+    client_app_db =  await create_client_app(db=db,client_app_data=client_app,user=user)
+    assert client_app_db in db
+    #test get clientapp
+    client_app_get =  await get_client_app(db=db,id=client_app_db.id)
+    assert client_app_get == client_app_db
+    with pytest.raises(sqlalchemy.exc.NoResultFound) as e:
+        await get_client_app(db=db,id=uuid.uuid4())
+    client_apps = await get_client_apps(db=db)
+    assert client_app_db in client_apps
+    #test update clientapp
+    client_app_update = ClientAppUpdate(**{"name": "Test App1","description": "Test App Description1"})
+    client_app_db = await update_client_app(db=db,id=client_app_db.id,client_app_data=client_app_update)
+    assert client_app_db.name == "Test App1"
+    assert client_app_db.description == "Test App Description1"
+    #test delete clientapp
+    client_app_db = await delete_client_app(db=db,id=client_app_db.id)
+    assert client_app_db not in db
+
+#test contenttype crud operations
+@pytest.mark.asyncio
+async def test_contenttype_crud(db):
+    #test create contenttype
+    content_type = ContentTypeCreate(**{"content": "users"})
+    content_type_db =  await create_content_type(db=db,content_type_data=content_type)
+    assert content_type_db in db
+    #test get contenttype
+    content_type_get =  await get_content_type(db=db,id=content_type_db.id)
+    assert content_type_get == content_type_db
+    with pytest.raises(sqlalchemy.exc.NoResultFound) as e:
+        await get_content_type(db=db,id=uuid.uuid4())
+    content_types = await get_content_types(db=db)
+    assert content_type_db in content_types
+    #test update contenttype
+    content_type_update = ContentTypeUpdate(**{"content": "users1"})
+    content_type_db = await update_content_type(db=db,id=content_type_db.id,content_type_data=content_type_update)
+    assert content_type_db.content == "users1"
+    #test delete contenttype
+    content_type_db = await delete_content_type(db=db,id=content_type_db.id)
+    assert content_type_db not in db
 
 
